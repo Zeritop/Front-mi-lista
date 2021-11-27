@@ -132,7 +132,6 @@ const mapDispatchToProps = dispatch => ({
             type: 'GET_ANIME_BY_NAME',
             payload: res.data
         })
-        // console.log(res.data.data);
     },
     async getResultsByLinks(link){
         const res = await axios.get(`${link}`)

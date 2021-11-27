@@ -3,7 +3,9 @@ import { createStore } from 'redux'
 const initialState = {
     animes: [],
     result: [],
-    genres: []
+    genres: [],
+    users: [],
+    lists: [],
 }
 
 const reducerAnime = (state = initialState, action) => {
@@ -27,7 +29,17 @@ const reducerAnime = (state = initialState, action) => {
             return {
                 ...state,
                 genres: action.payload
-            }              
+            }
+        case 'GET_USER':
+            return {
+                ...state,
+                users: action.payload
+            }
+        case 'GET_LISTS_BY_USER':
+            return {
+                ...state,
+                lists: action.payload
+            }       
         default:
             return state;
     }

@@ -7,7 +7,7 @@ const AppContainer = styled.div`
     height: 80vh;
     display: grid;
     grid-template-columns: 300px 1fr;
-    box-shadow: -5px 5px rgba(0,0,0, .3);
+    box-shadow: 0px 5px rgba(0,0,0, .3);
 `;
 
 export {

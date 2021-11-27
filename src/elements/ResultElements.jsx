@@ -45,6 +45,19 @@ const ContainerAddList = styled.div`
     }
 `;
 
+const NoResults = styled.div`
+    width: 70%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    
+    img{
+        width: 40%;
+    }
+`;
+
 
 
 export {
@@ -52,5 +65,6 @@ export {
     ResultHeader,
     ResultDetails,
     ResultDescription,
-    ContainerAddList
+    ContainerAddList,
+    NoResults
 }
