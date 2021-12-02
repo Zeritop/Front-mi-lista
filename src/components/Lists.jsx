@@ -21,18 +21,41 @@ import { NoResults } from '../elements/ResultElements';
 import ReactTooltip from 'react-tooltip';
 import { updateToList, deleteFromList } from '../services/ListServices';
 import { toast } from 'react-toastify';
+import jwt_decode from 'jwt-decode';
 
-const Lists = ({getListByUser, usrTk, lists, stateList}) => {
+const Lists = ({getListByUser, usrTk, lists, stateList, loggedIn, logIn}) => {
     const { username } = useParams();
     const [loadList, setLoadList] = useState(false);
+    const [igualdadNick, setIgualdadNick] = useState(false)
+    
     const lista = lists.filter(list => {
-        if(stateList === 'favoritos'){
-            return list.favourite === true
-        }else if(stateList === 'vistos'){
-            return list.seen === true
+                    if(stateList === 'favoritos'){
+                        return list.favourite === true
+                    }else if(stateList === 'vistos'){
+                        return list.seen === true
+                    }
+                    return list.favourite === false && list.seen === false
+                });
+    const getToken = localStorage.getItem('tk') ? localStorage.getItem('tk') : '';
+    useEffect(() => {
+        if(localStorage.getItem('tk')){
+            logIn()
         }
-        return list.favourite === false && list.seen === false
-    }).length;
+        if(loggedIn){
+            if(getToken !== ''){
+                const token = jwt_decode(getToken)
+                if(token.username === username){
+                    setIgualdadNick(true);
+                }else{
+                    setIgualdadNick(false);
+                }
+            }else{
+                setIgualdadNick(false);
+            }
+        }else{
+            setIgualdadNick(false)
+        }
+    }, [username, getToken, loggedIn, logIn])
     
     useEffect(() => {
 
@@ -57,18 +80,18 @@ const Lists = ({getListByUser, usrTk, lists, stateList}) => {
             case 'favourite':
                 try{
                     await updateToList(idList, author, title, urlImg, typeList, !fav, seenUnseen, usrTk.username, id);
+                    await getListByUser(username)
                 }catch(error){
                     toast.error(error.response.data.message)
                 }
-                await getListByUser(username)
                 break;
             case 'seen':
                 try{
                     await updateToList(idList, author, title, urlImg, typeList, fav, !seenUnseen, usrTk.username, id);
+                    await getListByUser(username)
                 }catch(error){
                     toast.error(error.response.data.message)
                 }
-                await getListByUser(username)
                 break;
             case 'delete':
                 try{
@@ -88,7 +111,7 @@ const Lists = ({getListByUser, usrTk, lists, stateList}) => {
     return (
         <ContainerList>
             {
-                lista !== 0 ? (<ScrollabeDiv>
+                lista.length !== 0 ? (<ScrollabeDiv>
                     {
                         loadList ? (<Table>
                             <thead>
@@ -102,15 +125,8 @@ const Lists = ({getListByUser, usrTk, lists, stateList}) => {
                             
                             <tbody>
                                 {
-                                    lists.filter(list => {
-                                        if(stateList === 'favoritos'){
-                                            return list.favourite === true
-                                        }else if(stateList === 'vistos'){
-                                            return list.seen === true
-                                        }
-                                        return list.favourite === false && list.seen === false
-                                    })
-                                    .map(l => (
+                                    
+                                    lista.map(l => (
                                         <tr key={l.idList}>
                                             <td>
                                                 <ListImg src={l.urlImg} alt="" />
@@ -122,12 +138,14 @@ const Lists = ({getListByUser, usrTk, lists, stateList}) => {
                                             </td>
                                             <td>{ l.typeList }</td>
                                             <TdButtonsTable>
-                                                <ContainerButtons>
-                                                    <ButtonImg>
+                                                <ContainerButtons igual={igualdadNick}>
+                                                    {
+                                                        igualdadNick && <>
+                                                        <ButtonImg>
                                                         <img 
                                                             src={l.favourite ? fav : star}
                                                             alt=""
-                                                            data-tip="Agregar a Favoritos"
+                                                            data-tip={l.favourite ? 'Quitar de Favoritos' : 'Agregar a Favoritos'}
                                                             name="favourite"
                                                             onClick={(e) => handleActions(e, l.idList, l.urlImg, l.title, l.typeList, l._id, l.author, l.favourite, l.seen)}
                                                          />
@@ -136,7 +154,7 @@ const Lists = ({getListByUser, usrTk, lists, stateList}) => {
                                                         <img 
                                                             src={l.seen ? seen : unseen}
                                                             alt=""
-                                                            data-tip="Agregar a Vistos"
+                                                            data-tip={l.seen ? 'Quitar de Vistos' : 'Agregar a Vistos'}
                                                             name="seen"
                                                             onClick={(e) => handleActions(e, l.idList, l.urlImg, l.title, l.typeList, l._id, l.author, l.favourite, l.seen)}
                                                         />
@@ -150,7 +168,9 @@ const Lists = ({getListByUser, usrTk, lists, stateList}) => {
                                                             onClick={(e) => handleActions(e, l.idList, l.urlImg, l.title, l.typeList, l._id, l.author)}
                                                         />
                                                     </ButtonImg>
-                                                    <ReactTooltip />
+                                                    <ReactTooltip /></>
+                                                    }
+                                                    
                                                 </ContainerButtons>
                                             </TdButtonsTable>
                                         </tr>
@@ -183,7 +203,8 @@ const Lists = ({getListByUser, usrTk, lists, stateList}) => {
 }
 
 const mapStateToProps = state => ({
-    lists: state.lists 
+    lists: state.lists,
+    loggedIn: state.loggedIn 
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -194,6 +215,12 @@ const mapDispatchToProps = dispatch => ({
             payload: res.data.data
         })
     },
+    logIn(){
+        dispatch({
+            type: 'LOGGED_IN',
+            payload: true
+        })
+    }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Lists);

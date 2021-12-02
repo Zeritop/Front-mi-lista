@@ -6,7 +6,7 @@ import jwt_decode from 'jwt-decode';
 
 const ProfileLists = () => {
 
-    const [usrTk, setUsrTk] = useState()
+    const [usrTk, setUsrTk] = useState('')
     const [stateList, setStateList] = useState('lista')
     
     useEffect(() => {

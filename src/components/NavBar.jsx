@@ -7,6 +7,8 @@ import Auth from './Auth';
 import jwt_decode from 'jwt-decode';
 import User from './User';
 import { Link } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import store from '../store';
 
 const NavBar = () => {
 
@@ -26,7 +28,11 @@ const NavBar = () => {
     return (
         <>
         {
-            auth && <Auth setAuth={setAuth} setTkLocal={setTkLocal} />
+            auth && (
+                <Provider store={store}>
+                    <Auth setAuth={setAuth} setTkLocal={setTkLocal} />
+                </Provider>
+            )
         } 
             <NavBarContent>
                 <div>
@@ -35,15 +41,19 @@ const NavBar = () => {
                     </Link>
                 </div>
                 {
-                    tkLocal ? <User user={user} setTkLocal={setTkLocal} />
+                    tkLocal ? (
+                        <Provider store={store}>
+                            <User user={user} setTkLocal={setTkLocal} />
+                        </Provider>
+                    )
                 :
-    
+                (
                 <ProfileImg 
                     src={profile} 
                     alt=""
                     onClick={() => setAuth(true)} 
                 />
-                
+                )
                 } 
             </NavBarContent>
         </>

@@ -3,13 +3,15 @@ import validateUser from '../functions/validateUser';
 
 const API = 'http://localhost:4000';
 
-const addToList = async (idList, author, title, urlImg, typeList) => {
+const addToList = async (idList, author, title, urlImg, typeList, favourite = false, seen = false) => {
     return await axios.post(`${API}/api/lists/add-list`, {
         idList,
         author,
         title,
         urlImg,
-        typeList
+        typeList,
+        favourite,
+        seen
     }, {headers: validateUser()})
 }
 

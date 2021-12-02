@@ -44,6 +44,7 @@ const Register = ({setRegister, setAuth}) => {
         try{
             const res = await registerAuth(username.inpVal, email.inpVal, password.inpVal);
             toast.success(res.data.message);
+            setRegister(false);
         }catch(error){
             toast.error(error.response.data.message ? error.response.data.message : error.response.data.error)
         }

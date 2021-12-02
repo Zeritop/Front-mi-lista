@@ -6,6 +6,7 @@ const initialState = {
     genres: [],
     users: [],
     lists: [],
+    loggedIn: false
 }
 
 const reducerAnime = (state = initialState, action) => {
@@ -39,7 +40,12 @@ const reducerAnime = (state = initialState, action) => {
             return {
                 ...state,
                 lists: action.payload
-            }       
+            }
+        case 'LOGGED_IN':
+            return {
+                ...state,
+                loggedIn: action.payload
+            }           
         default:
             return state;
     }

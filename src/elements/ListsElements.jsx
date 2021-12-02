@@ -58,7 +58,7 @@ const ButtonImg = styled.button`
 
 const ContainerButtons = styled.div`
     width: 100%;
-    opacity: 0;
+    opacity: 0; 
 `;
 
 const TdButtonsTable = styled.td`

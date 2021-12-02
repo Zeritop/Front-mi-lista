@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'react-redux';
 import { toast } from 'react-toastify';
 import { BodyAuth,
     ContainerAuth,
@@ -11,7 +12,7 @@ import { BodyAuth,
 import { useFormAuth } from '../hooks/customHooks';
 import { loginAuth } from '../services/AuthServices';
 
-const Login = ({setAuth, setRegister, setTkLocal}) => {
+const Login = ({setAuth, setRegister, setTkLocal, logIn}) => {
 
     const email = useFormAuth();
     const password = useFormAuth();
@@ -45,6 +46,7 @@ const Login = ({setAuth, setRegister, setTkLocal}) => {
             localStorage.setItem('tk', res.data.data);
             setTkLocal(true);
             setAuth(false);
+            logIn();
         }catch(error){
             toast.error(error.response.data.message)
         }
@@ -92,4 +94,15 @@ const Login = ({setAuth, setRegister, setTkLocal}) => {
     )
 }
 
-export default Login
+const mapStateToProps = state => ({})
+
+const mapDispatchToProps = dispatch => ({
+    logIn(){
+        dispatch({
+            type: 'LOGGED_IN',
+            payload: true
+        })
+    }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login) 

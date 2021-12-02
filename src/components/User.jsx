@@ -2,8 +2,9 @@ import React, { useState } from 'react'
 import { UserContainer, UserOptions } from '../elements/UserElements';
 import ClickAwayListener from 'react-click-away-listener';
 import { LinkLi } from '../elements/UserElements';
+import { connect } from 'react-redux';
 
-const User = ({user, setTkLocal}) => {
+const User = ({user, setTkLocal, loggedOut}) => {
 
     const [options, setOptions] = useState(false);
 
@@ -14,6 +15,7 @@ const User = ({user, setTkLocal}) => {
     const logOut = () => {
         localStorage.removeItem('tk');
         setTkLocal(false);
+        loggedOut();
     }
 
     const handleClickAway = () => {
@@ -39,4 +41,15 @@ const User = ({user, setTkLocal}) => {
     )
 }
 
-export default User
+const mapStateToProps = state => ({})
+
+const mapDispatchToProps = dispatch => ({
+    loggedOut(){
+        dispatch({
+            type: 'LOGGED_IN',
+            payload: false
+        })
+    }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(User)
