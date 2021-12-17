@@ -1,12 +1,17 @@
 import styled from 'styled-components';
 
 const NavBarContent = styled.nav`
-    
+    width: 100%;
     background: #1290cb;
-    padding: 5px;
+    padding: 5px 0px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    @media(max-width: 375px){
+        padding: 0;
+        justify-content: space-around;
+    }
 `;
 
 const BrandImg = styled.img`
@@ -14,6 +19,11 @@ const BrandImg = styled.img`
     margin-left: 30px;
     object-fit: none;
     cursor: pointer;
+
+    @media(max-width: 375px){
+        margin-left: 0px;
+        width: 15rem;
+    }
 `;
 
 const ProfileImg = styled.img`

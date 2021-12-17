@@ -2,9 +2,13 @@ import styled from 'styled-components';
 
 const ConatinerResult = styled.div`
     width: 100%;
-    height: 90%;
+    height: 100%;
     overflow: auto;
-    padding: 10px;
+    padding: 0px;
+
+    @media(max-width: 375px){
+        padding: 0;
+    }
 `;
 
 const ResultHeader = styled.div`
@@ -13,6 +17,18 @@ const ResultHeader = styled.div`
 
     img{
         width: 20%;
+    }
+
+    @media(max-width: 430px){
+        img{
+            display: none;
+        }
+    }
+
+    @media(min-width: 430px) and (max-width: 810px){
+        img{
+            width: 50%;
+        }
     }
 `;
 
@@ -25,10 +41,18 @@ const ResultDetails = styled.div`
         list-style: none;
         padding: 0;
     }
+
+    @media(max-width: 375px){
+        margin-left: 30px;
+    }
 `;
 
 const ResultDescription = styled.div`
-    width: 65vw;
+    width: 80%;
+
+    @media(max-width: 430px){
+        margin-left: 30px;
+    }
 `;
 
 const ContainerAddList = styled.div`
@@ -43,10 +67,25 @@ const ContainerAddList = styled.div`
             cursor: pointer;
         }
     }
+
+    @media(max-width: 430px){
+        width: 90%;
+        
+        span{
+            text-align: center;
+            img{
+                width: 25%;
+            }
+        }
+    }
+
+    @media(min-width: 430px) and (max-width: 810px){
+        width: 30%;
+    }
 `;
 
 const NoResults = styled.div`
-    width: 70%;
+    width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
@@ -55,6 +94,14 @@ const NoResults = styled.div`
     
     img{
         width: 40%;
+    }
+
+    @media(max-width: 375px){
+        
+        img{
+            width: 60%;
+        }
+
     }
 `;
 

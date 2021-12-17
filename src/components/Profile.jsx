@@ -14,9 +14,9 @@ const Profile = ({getUser, users, lists}) => {
     const [loadUser, setLoadUser] = useState(false);
     const { username } = useParams();
     const navigate = useNavigate();
-    const allLists = lists.filter(l => l.favourite === false && l.seen === false);
-    const favLists = lists.filter(l => l.favourite === true);
-    const seenLists = lists.filter(l => l.seen === true);
+    const allLists = lists.filter(l => l.favourite === false && l.seen === false).length;
+    const favLists = lists.filter(l => l.favourite === true).length;
+    const seenLists = lists.filter(l => l.seen === true).length;
 
     useEffect(() => {
         let tiempo;
@@ -37,40 +37,40 @@ const Profile = ({getUser, users, lists}) => {
                 {
                     loadUser ? (
                     <>
-                    <ContainerProfile>
-                        <img src={userImg} alt="" />
-                        {
-                            <>
-                                <h2>{ users.username }</h2>
-                                <p>follows</p>
-                                <p>followers</p>
-                            </>
-                        }
-                        <p>Lista: { allLists.length }</p>
-                        <p>Favoritos: { favLists.length }</p>
-                        <p>Vistos: { seenLists.length }</p>
-                    </ContainerProfile>
-                    
-                    <ProfileLists />
-                </>)
-                :
-                (
+                        <ContainerProfile>
+                            <img src={userImg} alt="" />
+                            {
+                                <>
+                                    <h2>{ users.username }</h2>
+                                    {/* <p>follows</p>
+                                    <p>followers</p> */}
+                                </>
+                            }
+                            <p>Lista: { allLists }</p>
+                            <p>Favoritos: { favLists }</p>
+                            <p>Vistos: { seenLists }</p>
+                        </ContainerProfile>
+                        
+                        <ProfileLists />
+                    </>
+                    )
+                    : (
                     <>
-                    <div></div>
-                    <NoResults>
-                        <Loading>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                            <div></div>
-                        </Loading>
-                    </NoResults>
-                </>
-                )
+                        <div></div>
+                        <NoResults>
+                            <Loading>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </Loading>
+                        </NoResults>
+                    </>
+                    )
                 }
                 
             </AppContainer>

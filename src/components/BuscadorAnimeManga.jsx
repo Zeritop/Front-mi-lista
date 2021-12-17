@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Buscador from './Buscador';
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { Resultados, ContainerAMBtns, ButtonsAM } from '../elements/BuscadorElements';
+import { Resultados, ContainerAMBtns, ButtonsAM, ContainerPrincipal } from '../elements/BuscadorElements';
 import BuscadorNavegacionBtns from './BuscadorNavegacionBtns';
 
 const BuscadorAnimeManga = ({getAnime, animes, getResultsByLinks, getResult, getGenres, setLoadResult}) => {
@@ -72,7 +72,7 @@ const BuscadorAnimeManga = ({getAnime, animes, getResultsByLinks, getResult, get
     }
 
     return (
-        <div>
+        <ContainerPrincipal>
             <ContainerAMBtns>
                 <ButtonsAM 
                     onClick={(e) => animeManga(e)}
@@ -98,8 +98,8 @@ const BuscadorAnimeManga = ({getAnime, animes, getResultsByLinks, getResult, get
             </form>
             <Resultados>
             {
-               load && animes.data.map( anime => (
-                   <ul key={anime.id}>
+                load && animes.data.map( anime => (
+                    <ul key={anime.id}>
                        <li 
                         onClick={() => handleLista(anime)}
                        >
@@ -117,7 +117,7 @@ const BuscadorAnimeManga = ({getAnime, animes, getResultsByLinks, getResult, get
             {
                 load && <BuscadorNavegacionBtns handleLinks={handleLinks} animes={animes}/>
             }
-        </div>
+        </ContainerPrincipal>
     )
 }
 

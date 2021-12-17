@@ -43,9 +43,9 @@ const Results = ({result, genres, loadResult, getListByUser}) => {
                             <h1>{ result.attributes.canonicalTitle }</h1>
                             <label>Episodes: { result.attributes.episodeCount ? result.attributes.episodeCount : result.attributes.chapterCount }</label>
                             <ul>
-                                <li>Type: { result.type }</li>
-                                <li>Staus: { result.attributes.status }</li>
-                                <li>Subtype: { result.attributes.subtype }</li>
+                                <li> <b>Type:</b>  { result.type }</li>
+                                <li> <b>Staus:</b>  { result.attributes.status }</li>
+                                <li> <b>Subtype:</b>  { result.attributes.subtype }</li>
                             </ul>
                             <label>Genres: {
                                 genres.map( genre => (

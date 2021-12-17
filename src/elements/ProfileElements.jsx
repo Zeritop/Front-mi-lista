@@ -1,8 +1,12 @@
 import styled from 'styled-components';
 
+const ContainerPrincipalProfile = styled.div`
+    height: 100%;
+`;
+
 const ContainerProfile = styled.div`
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -11,6 +15,21 @@ const ContainerProfile = styled.div`
     img{
         width: 30%;
         margin-bottom: 10px;
+        margin-top: 10px;
+    }
+
+    @media(max-width: 375px){
+        img{
+            margin-top: 4rem;
+            width: 10%;
+        }
+    }
+
+    @media(max-width: 430px){
+        img{
+            margin-top: 4rem;
+            width: 20%;
+        }
     }
 `;
 
@@ -20,22 +39,33 @@ const ContainerProfileLists = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    @media(max-width: 375px){
+        width: 23rem;
+    }
     
 `;
 
 const ContainerButtonsLists = styled.div`
-    width: 30%;
+    width: 50%;
     height: 20%;
     display: flex;
     justify-content: center;
     margin-top: 10px;
-
+    
+    @media(max-width: 430px){
+        width: 60%;
+    }
+    
+    @media(min-width: 430px) and (max-width: 1000px){
+        width: 60%;
+    }
     
 `;
 
 const ContainerList = styled.div`
     width: 80%;
-    height: 60vh;
+    height: 70%;
     display: flex;
     justify-content: center;
 `;
@@ -64,6 +94,16 @@ const ButtonProfile = styled.button`
         outline: blue 1px solid;
         margin-right: 1px;
     }
+
+    @media(max-width: 430px){
+        width: 60%;
+        height: 70%;
+    }
+
+    @media(min-width: 430px) and (max-width: 1000px){
+        width: 80%;
+    }
+
     
 `;
 
@@ -72,5 +112,6 @@ export {
     ContainerProfileLists,
     ContainerButtonsLists,
     ContainerList,
-    ButtonProfile
+    ButtonProfile,
+    ContainerPrincipalProfile
 }

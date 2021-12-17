@@ -12,6 +12,10 @@ const UserContainer = styled.div`
         }
         
     }
+
+    @media(max-width: 375px){
+        margin-right: 0;
+    }
 `;
 
 const UserOptions = styled.div`
@@ -31,6 +35,10 @@ const UserOptions = styled.div`
                 background: #eee;
             }
         }
+    }
+
+    @media(max-width: 375px){
+        right: 1rem;
     }
 `;
 

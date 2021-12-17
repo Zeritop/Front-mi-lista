@@ -1,16 +1,28 @@
 import styled from 'styled-components';
 
+const ContainerPrincipal = styled.div`
+    height: 60%;
+`;
+
 const ContainerBuscador = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
+    @media(min-width: 430px) and (max-width: 810px){
+        width: 90%
+    }
 `;
 
 const ContainerAMBtns = styled.div`
     display: flex;
     justify-content: center;
     margin-top: 10px;
+
+    @media(min-width: 430px) and (max-width: 810px){
+        width: 100%;
+    }
 `;
 
 const Resultados = styled.div`
@@ -18,6 +30,7 @@ const Resultados = styled.div`
     height: 50vh;
     overflow: auto;
     padding: 0 10px;
+
     ul{
         list-style: none;
 
@@ -29,6 +42,13 @@ const Resultados = styled.div`
             }
         }
     }
+
+    @media(max-width: 430px){
+        height: 100%;
+        ul{
+            padding: 0;
+        }
+    } 
 `;
 
 const ContainerNavegacionBtns = styled.div`
@@ -54,6 +74,10 @@ const ButtonsNav = styled.button`
     &:active{
         width: 15%;
     }
+
+    @media(max-width: 375px){
+        width: 15%;
+    }
 `;
 
 const ButtonsAM = styled.button`
@@ -74,6 +98,11 @@ const ButtonsAM = styled.button`
     &:hover{
         outline: blue 1px solid;
     }
+
+    @media(min-width: 430px) and (max-width: 810px){
+        width: 40%;
+    }
+
 `;
 
 const InputBuscador = styled.input`
@@ -97,10 +126,14 @@ const InputBuscador = styled.input`
         border-left: blue 5px solid;
 
     }
+
+    @media(min-width: 430px) and (max-width: 810px){
+        width: 100%;
+    }
 `;
 
 const ButtonSearch = styled.button`
-    width: 10%;
+    width: 8%;
     border: transparent 1px solid;
     outline: none;
     background: #08f;
@@ -114,6 +147,14 @@ const ButtonSearch = styled.button`
 
     img{
         width: 100%;
+    }
+
+    @media(max-width: 376px){
+        width: 8%;
+    }
+
+    @media(min-width: 430px) and (max-width: 810px){
+        width: 20%;
     }
 `;
 
@@ -132,5 +173,6 @@ export {
     ButtonsAM,
     InputBuscador,
     ButtonSearch,
-    ConatainerInput
+    ConatainerInput,
+    ContainerPrincipal
 }
