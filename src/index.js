@@ -10,10 +10,16 @@ import Profile from './components/Profile';
 import NotFound404 from './components/NotFound404';
 import { Provider } from 'react-redux';
 import store from './store';
+import { Helmet } from 'react-helmet'
+import favicon from './img/logo_size_favicon.jpg'
 
 
 ReactDOM.render(
   <>
+    <Helmet>
+      <link rel="shortcut icon" href={favicon} type="image/x-icon"/>
+      <title>Mi Lista</title>
+    </Helmet>
     <BrowserRouter>
     <NavBar />
 
