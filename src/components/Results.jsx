@@ -10,6 +10,7 @@ import AddList from './AddList';
 import animeNoResult from '../img/anime-triste.png';
 import jwt_decode from 'jwt-decode';
 import axios from 'axios';
+import { API } from '../entorno';
 
 const Results = ({result, genres, loadResult, getListByUser}) => {
     const [token, setToken] = useState('');
@@ -25,7 +26,7 @@ const Results = ({result, genres, loadResult, getListByUser}) => {
         if(localStorage.getItem('tk')){
             let tiempo;
             tiempo = setTimeout(async () => {
-                await getListByUser(token.username)
+                await getListByUser(token.username, API)
             }, 500)
     
             return(() => clearTimeout(tiempo))
@@ -85,8 +86,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    async getListByUser(author){
-        const res = await axios.post(`http://localhost:4000/api/lists-no-tk/get-lists`, {author})
+    async getListByUser(author, API){
+        const res = await axios.post(`${API}/api/lists-no-tk/get-lists`, {author})
         dispatch({
             type: 'GET_LISTS_BY_USER',
             payload: res.data.data

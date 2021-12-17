@@ -8,6 +8,7 @@ import axios from 'axios';
 import { Loading } from '../elements/Loading';
 import { NoResults } from '../elements/ResultElements';
 import ProfileLists from './ProfileLists';
+import { API } from '../entorno';
 
 const Profile = ({getUser, users, lists}) => {
 
@@ -22,7 +23,7 @@ const Profile = ({getUser, users, lists}) => {
         let tiempo;
         tiempo = setTimeout(async () => {
             try{
-                await getUser(username);    
+                await getUser(username, API);    
                 setLoadUser(true);
             }catch(error){
                 navigate("/not-found")
@@ -83,9 +84,9 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    async getUser(username){
+    async getUser(username, API){
 
-        const res = await axios.post('http://localhost:4000/api/users/get-user', {
+        const res = await axios.post(`${API}/api/users/get-user`, {
             username
         });
         dispatch({

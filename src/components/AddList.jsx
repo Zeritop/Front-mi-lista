@@ -13,6 +13,7 @@ import jwt_decode from 'jwt-decode';
 import { toast } from 'react-toastify';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import { API } from '../entorno';
 
 const AddList = ({idResult, title, urlImg, typeList, lists, getListByUser}) => {
     const [tkn, setTkn] = useState('');
@@ -59,7 +60,7 @@ const AddList = ({idResult, title, urlImg, typeList, lists, getListByUser}) => {
                         if(!inArray){
                             try{
                                 const res = await addToList(idResult, tkn.username, title, urlImg, typeList);
-                                await getListByUser(tkn.username)
+                                await getListByUser(tkn.username, API)
                                 list.setAdd(true);
                                 toast.success(res.data.message)
                             }catch(error){
@@ -68,7 +69,7 @@ const AddList = ({idResult, title, urlImg, typeList, lists, getListByUser}) => {
                         }else{
                             try{
                                 const res = await deleteFromList(findInList[0]._id, findInList[0].author, tkn.username)
-                                await getListByUser(tkn.username)
+                                await getListByUser(tkn.username, API)
                                 list.setAdd(false);
                                 toast.success(res.data.message);
                             }catch(error){
@@ -82,7 +83,7 @@ const AddList = ({idResult, title, urlImg, typeList, lists, getListByUser}) => {
                                 favourite = true;
                                 seen = false;
                                 const res = await addToList(idResult, tkn.username, title, urlImg, typeList, favourite, seen);
-                                await getListByUser(tkn.username)
+                                await getListByUser(tkn.username, API)
                                 list.setAdd(true);
                                 toast.success(res.data.message)
                             }catch(error){
@@ -92,7 +93,7 @@ const AddList = ({idResult, title, urlImg, typeList, lists, getListByUser}) => {
                         }else{
                             try{
                                 const res = await updateToList(idResult, findInList[0].author, title, urlImg, typeList, !findInList[0].favourite, seen, tkn.username, findInList[0]._id)
-                                await getListByUser(tkn.username)
+                                await getListByUser(tkn.username, API)
                                 // list.setAdd(true)
                                 toast.success(res.data.message)
                             }catch(error){
@@ -106,7 +107,7 @@ const AddList = ({idResult, title, urlImg, typeList, lists, getListByUser}) => {
                                 favourite = false;
                                 seen = true;
                                 const res = await addToList(idResult, tkn.username, title, urlImg, typeList, favourite, seen);
-                                await getListByUser(tkn.username)
+                                await getListByUser(tkn.username, API)
                                 list.setAdd(true);
                                 toast.success(res.data.message)
                             }catch(error){
@@ -116,7 +117,7 @@ const AddList = ({idResult, title, urlImg, typeList, lists, getListByUser}) => {
                         }else{
                             try{
                                 const res = await updateToList(idResult, findInList[0].author, title, urlImg, typeList, favourite, !findInList[0].seen, tkn.username, findInList[0]._id)
-                                await getListByUser(tkn.username)
+                                await getListByUser(tkn.username, API)
                                 // list.setAdd(true)
                                 toast.success(res.data.message)
                             }catch(error){
@@ -173,8 +174,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    async getListByUser(author){
-        const res = await axios.post(`http://localhost:4000/api/lists-no-tk/get-lists`, {author})
+    async getListByUser(author, API){
+        const res = await axios.post(`${API}/api/lists-no-tk/get-lists`, {author})
         dispatch({
             type: 'GET_LISTS_BY_USER',
             payload: res.data.data

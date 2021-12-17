@@ -6,7 +6,6 @@ import { useState } from 'react';
 const App = () => {
   const [loadResult, setLoadResult] = useState(false)
 
-
   return (
     <AppContainer>
       <BuscadorAnimeManga setLoadResult={setLoadResult} />

@@ -22,6 +22,7 @@ import ReactTooltip from 'react-tooltip';
 import { updateToList, deleteFromList } from '../services/ListServices';
 import { toast } from 'react-toastify';
 import jwt_decode from 'jwt-decode';
+import { API } from '../entorno';
 
 const Lists = ({getListByUser, usrTk, lists, stateList, loggedIn, logIn}) => {
     const { username } = useParams();
@@ -62,7 +63,7 @@ const Lists = ({getListByUser, usrTk, lists, stateList, loggedIn, logIn}) => {
         let tiempo;
         tiempo = setTimeout(async () => {
             try{
-                await getListByUser(username)
+                await getListByUser(username, API)
                 setLoadList(true);
             }catch(error){
                 console.log(error);
@@ -80,7 +81,7 @@ const Lists = ({getListByUser, usrTk, lists, stateList, loggedIn, logIn}) => {
             case 'favourite':
                 try{
                     await updateToList(idList, author, title, urlImg, typeList, !fav, seenUnseen, usrTk.username, id);
-                    await getListByUser(username)
+                    await getListByUser(username, API)
                 }catch(error){
                     toast.error(error.response.data.message)
                 }
@@ -88,7 +89,7 @@ const Lists = ({getListByUser, usrTk, lists, stateList, loggedIn, logIn}) => {
             case 'seen':
                 try{
                     await updateToList(idList, author, title, urlImg, typeList, fav, !seenUnseen, usrTk.username, id);
-                    await getListByUser(username)
+                    await getListByUser(username, API)
                 }catch(error){
                     toast.error(error.response.data.message)
                 }
@@ -97,7 +98,7 @@ const Lists = ({getListByUser, usrTk, lists, stateList, loggedIn, logIn}) => {
                 try{
                     const res = await deleteFromList(id, author, usrTk.username)
                     toast.success(res.data.message)
-                    await getListByUser(username)
+                    await getListByUser(username, API)
                 }catch(error){
                     toast.error(error.response.data.message)
                 }
@@ -208,8 +209,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    async getListByUser(author){
-        const res = await axios.post(`http://localhost:4000/api/lists-no-tk/get-lists`, {author})
+    async getListByUser(author, API){
+        const res = await axios.post(`${API}/api/lists-no-tk/get-lists`, {author})
         dispatch({
             type: 'GET_LISTS_BY_USER',
             payload: res.data.data

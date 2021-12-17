@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { API } from '../entorno';
 
-const API = 'http://localhost:4000';
+// const API = window.location.hostname === 'localhost' || window.location.hostname === "127.0.0.1" ? 'http://localhost:4000' : 'https://backend-mi-lista.herokuapp.com/';
 
 const registerAuth = async (username, email, password) => {
     return await axios.post(`${API}/api/users/register`, {
