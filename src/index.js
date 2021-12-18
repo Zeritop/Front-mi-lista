@@ -15,7 +15,7 @@ import favicon from './img/logo_size_favicon.jpg'
 
 
 ReactDOM.render(
-  <>
+  <div>
     <Helmet>
       <link rel="shortcut icon" href={favicon} type="image/x-icon"/>
       <title>Mi Lista</title>
@@ -42,7 +42,7 @@ ReactDOM.render(
       </Routes>
     </BrowserRouter>
     <ToastContainer />
-  </>  
+  </div>  
   ,
   document.getElementById('root')
 );
