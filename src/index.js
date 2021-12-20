@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App.jsx';
@@ -10,39 +10,46 @@ import Profile from './components/Profile';
 import NotFound404 from './components/NotFound404';
 import { Provider } from 'react-redux';
 import store from './store';
-import { Helmet } from 'react-helmet'
 import favicon from './img/logo_size_favicon.jpg'
+import { Helmet, HelmetProvider } from 'react-helmet-async'
 
 
-ReactDOM.render(
-  <div>
-    <Helmet>
-      <link rel="shortcut icon" href={favicon} type="image/x-icon"/>
-      <title>Mi Lista</title>
-    </Helmet>
-    <BrowserRouter>
-    <NavBar />
-
-      <Routes>
-
-        <Route path="/" element={
-          <Provider store={store}>
-              <App />
-          </Provider>
-        } />
+const Index = () => {
+  return(
+    <StrictMode>
+      <HelmetProvider>
+        <Helmet>
+          <link rel="shortcut icon" href={favicon} type="image/x-icon"/>
+          <title>Mi Lista</title>  
+        </Helmet>
         
-        <Route path="profile/:username" element={
-          <Provider store={store}>
-            <Profile />
-          </Provider>
-        } />
-        
-        <Route path="*" element={<NotFound404 />} />
+        <BrowserRouter>
+        <NavBar />
 
-      </Routes>
-    </BrowserRouter>
-    <ToastContainer />
-  </div>  
-  ,
-  document.getElementById('root')
+          <Routes>
+
+            <Route path="/" element={
+              <Provider store={store}>
+                  <App />
+              </Provider>
+            } />
+            
+            <Route path="profile/:username" element={
+              <Provider store={store}>
+                <Profile />
+              </Provider>
+            } />
+            
+            <Route path="*" element={<NotFound404 />} />
+
+          </Routes>
+        </BrowserRouter>
+        <ToastContainer />
+      </HelmetProvider>
+    </StrictMode>  
+
+  )
+}
+
+ReactDOM.render(<Index/>, document.getElementById('root')
 );
