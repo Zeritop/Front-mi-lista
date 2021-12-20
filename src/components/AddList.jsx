@@ -50,84 +50,82 @@ const AddList = ({idResult, title, urlImg, typeList, lists, getListByUser}) => {
         if(!localStorage.getItem('tk')){
             return toast.warning('Inicia sesión para esta acción')
         }else{
-            if(lists.length !== 0){
-                const inArray = lists.map(l => l.idList).includes(idResult);
-                const findInList = lists.filter(l => l.idList === idResult)
-                let favourite;
-                let seen;
-                switch(name){
-                    case 'lista':
-                        if(!inArray){
-                            try{
-                                const res = await addToList(idResult, tkn.username, title, urlImg, typeList);
-                                await getListByUser(tkn.username, API)
-                                list.setAdd(true);
-                                toast.success(res.data.message)
-                            }catch(error){
-                                return toast.error(error.response.data.message)
-                            }
-                        }else{
-                            try{
-                                const res = await deleteFromList(findInList[0]._id, findInList[0].author, tkn.username)
-                                await getListByUser(tkn.username, API)
-                                list.setAdd(false);
-                                toast.success(res.data.message);
-                            }catch(error){
-                                return toast.error(error.response.data.message)
-                            }
+            const inArray = lists.map(l => l.idList).includes(idResult);
+            const findInList = lists.filter(l => l.idList === idResult)
+            let favourite;
+            let seen;
+            switch(name){
+                case 'lista':
+                    if(!inArray){
+                        try{
+                            const res = await addToList(idResult, tkn.username, title, urlImg, typeList);
+                            await getListByUser(tkn.username, API)
+                            list.setAdd(true);
+                            toast.success(res.data.message)
+                        }catch(error){
+                            return toast.error(error.response.data.message)
                         }
-                        break;
-                    case 'favoritos':
-                        if(!inArray){
-                            try{
-                                favourite = true;
-                                seen = false;
-                                const res = await addToList(idResult, tkn.username, title, urlImg, typeList, favourite, seen);
-                                await getListByUser(tkn.username, API)
-                                list.setAdd(true);
-                                toast.success(res.data.message)
-                            }catch(error){
-                                return toast.error(error.response.data.message)
-                                
-                            }
-                        }else{
-                            try{
-                                const res = await updateToList(idResult, findInList[0].author, title, urlImg, typeList, !findInList[0].favourite, seen, tkn.username, findInList[0]._id)
-                                await getListByUser(tkn.username, API)
-                                // list.setAdd(true)
-                                toast.success(res.data.message)
-                            }catch(error){
-                                return toast.error(error.response.data.message)
-                            }
+                    }else{
+                        try{
+                            const res = await deleteFromList(findInList[0]._id, findInList[0].author, tkn.username)
+                            await getListByUser(tkn.username, API)
+                            list.setAdd(false);
+                            toast.success(res.data.message);
+                        }catch(error){
+                            return toast.error(error.response.data.message)
                         }
-                        break;
-                    case 'vistos':
-                        if(!inArray){
-                            try{
-                                favourite = false;
-                                seen = true;
-                                const res = await addToList(idResult, tkn.username, title, urlImg, typeList, favourite, seen);
-                                await getListByUser(tkn.username, API)
-                                list.setAdd(true);
-                                toast.success(res.data.message)
-                            }catch(error){
-                                return toast.error(error.response.data.message)
-                                
-                            }
-                        }else{
-                            try{
-                                const res = await updateToList(idResult, findInList[0].author, title, urlImg, typeList, favourite, !findInList[0].seen, tkn.username, findInList[0]._id)
-                                await getListByUser(tkn.username, API)
-                                // list.setAdd(true)
-                                toast.success(res.data.message)
-                            }catch(error){
-                                return toast.error(error.response.data.message)
-                            }
+                    }
+                    break;
+                case 'favoritos':
+                    if(!inArray){
+                        try{
+                            favourite = true;
+                            seen = false;
+                            const res = await addToList(idResult, tkn.username, title, urlImg, typeList, favourite, seen);
+                            await getListByUser(tkn.username, API)
+                            list.setAdd(true);
+                            toast.success(res.data.message)
+                        }catch(error){
+                            return toast.error(error.response.data.message)
+                            
                         }
-                        break;        
-                    default:
-                        break;        
-                }
+                    }else{
+                        try{
+                            const res = await updateToList(idResult, findInList[0].author, title, urlImg, typeList, !findInList[0].favourite, seen, tkn.username, findInList[0]._id)
+                            await getListByUser(tkn.username, API)
+                            // list.setAdd(true)
+                            toast.success(res.data.message)
+                        }catch(error){
+                            return toast.error(error.response.data.message)
+                        }
+                    }
+                    break;
+                case 'vistos':
+                    if(!inArray){
+                        try{
+                            favourite = false;
+                            seen = true;
+                            const res = await addToList(idResult, tkn.username, title, urlImg, typeList, favourite, seen);
+                            await getListByUser(tkn.username, API)
+                            list.setAdd(true);
+                            toast.success(res.data.message)
+                        }catch(error){
+                            return toast.error(error.response.data.message)
+                            
+                        }
+                    }else{
+                        try{
+                            const res = await updateToList(idResult, findInList[0].author, title, urlImg, typeList, favourite, !findInList[0].seen, tkn.username, findInList[0]._id)
+                            await getListByUser(tkn.username, API)
+                            // list.setAdd(true)
+                            toast.success(res.data.message)
+                        }catch(error){
+                            return toast.error(error.response.data.message)
+                        }
+                    }
+                    break;        
+                default:
+                    break;        
             }
 
         }

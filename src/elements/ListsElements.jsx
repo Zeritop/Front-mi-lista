@@ -1,11 +1,11 @@
 import styled from 'styled-components';
 
 const ListImg = styled.img`
-    width: 30%;
+    max-width: 45%;
 `;
 
 const TitleTable = styled.div`
-    width: 80%;
+    width: 30rem;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
