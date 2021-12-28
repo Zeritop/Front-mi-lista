@@ -28,8 +28,8 @@ const BuscadorAnimeManga = ({getAnime, animes, getResultsByLinks, getResult, get
         if(goTop){
             // De ser verdadero encuentra el div con Scroll y manda el scroll hacia el inicio con un efecto smooth
             // window.document.body.childNodes[3].childNodes[1].childNodes[0].childNodes[2].scrollTo({top:0, behavior: 'smooth'})
-            // setGoTop(false) 
-            console.log(window.document.body.childNodes[3].children[1].children[0].children[2]);
+            document.getElementById("resultados").scrollTo({top: 0, behavior: 'smooth'})
+            setGoTop(false) 
         }
     }, [goTop])
 
@@ -130,7 +130,7 @@ const BuscadorAnimeManga = ({getAnime, animes, getResultsByLinks, getResult, get
                     handleChange={handleChange}
                 />
             </form>
-            <Resultados onScroll={handleScroll} >
+            <Resultados onScroll={handleScroll} id="resultados" >
             <ul>
                 {
                     load && animes.data.map( anime => (
