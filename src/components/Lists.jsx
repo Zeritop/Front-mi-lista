@@ -23,11 +23,14 @@ import { updateToList, deleteFromList } from '../services/ListServices';
 import { toast } from 'react-toastify';
 import jwt_decode from 'jwt-decode';
 import { API } from '../entorno';
+import ListModal from './ListModal';
 
 const Lists = ({getListByUser, usrTk, lists, stateList, loggedIn, logIn}) => {
     const { username } = useParams();
     const [loadList, setLoadList] = useState(false);
     const [igualdadNick, setIgualdadNick] = useState(false)
+    const [modal , setModal] = useState(false);
+    const [modalDesc, setModalDesc] = useState({})
     
     const lista = lists.filter(list => {
                     if(stateList === 'favoritos'){
@@ -108,6 +111,16 @@ const Lists = ({getListByUser, usrTk, lists, stateList, loggedIn, logIn}) => {
         }
     }
 
+    const modalDescription = (title, urlImg, id, typelist) => {
+        setModal(true);
+        setModalDesc({
+            title,
+            urlImg,
+            id,
+            typelist
+        })
+    }
+
 
     return (
         <ContainerList>
@@ -128,7 +141,10 @@ const Lists = ({getListByUser, usrTk, lists, stateList, loggedIn, logIn}) => {
                                 {
                                     
                                     lista.map(l => (
-                                        <tr key={l.idList}>
+                                        <tr 
+                                            key={l.idList}
+                                            onClick={() => modalDescription(l.title, l.urlImg, l.idList, l.typeList)}
+                                        >
                                             <td>
                                                 <ListImg src={l.urlImg} alt="" />
                                             </td>
@@ -198,7 +214,9 @@ const Lists = ({getListByUser, usrTk, lists, stateList, loggedIn, logIn}) => {
                 :
                 (<div>Sin Resultados</div>)
             }
-            
+            {
+              modal && <ListModal description={modalDesc} setModal={setModal} />  
+            } 
         </ContainerList>
     )
 }

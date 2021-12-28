@@ -2,15 +2,14 @@ import axios from 'axios';
 import validateUser from '../functions/validateUser';
 import { API } from '../entorno';
 
-// const API = window.location.hostname === 'localhost' || window.location.hostname === "127.0.0.1" ? 'http://localhost:4000' : 'https://backend-mi-lista.herokuapp.com/';
-
-const addToList = async (idList, author, title, urlImg, typeList, favourite = false, seen = false) => {
+const addToList = async (idList, author, title, urlImg, typeList, description, favourite = false, seen = false) => {
     return await axios.post(`${API}/api/lists/add-list`, {
         idList,
         author,
         title,
         urlImg,
         typeList,
+        description,
         favourite,
         seen
     }, {headers: validateUser()})

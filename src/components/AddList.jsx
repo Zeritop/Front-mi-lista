@@ -15,7 +15,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import { API } from '../entorno';
 
-const AddList = ({idResult, title, urlImg, typeList, lists, getListByUser}) => {
+const AddList = ({idResult, title, urlImg, typeList, lists, getListByUser, description}) => {
     const [tkn, setTkn] = useState('');
     const getToken = localStorage.getItem('tk')
     const list = useAdd();
@@ -58,7 +58,7 @@ const AddList = ({idResult, title, urlImg, typeList, lists, getListByUser}) => {
                 case 'lista':
                     if(!inArray){
                         try{
-                            const res = await addToList(idResult, tkn.username, title, urlImg, typeList);
+                            const res = await addToList(idResult, tkn.username, title, urlImg, typeList, description);
                             await getListByUser(tkn.username, API)
                             list.setAdd(true);
                             toast.success(res.data.message)
@@ -81,7 +81,7 @@ const AddList = ({idResult, title, urlImg, typeList, lists, getListByUser}) => {
                         try{
                             favourite = true;
                             seen = false;
-                            const res = await addToList(idResult, tkn.username, title, urlImg, typeList, favourite, seen);
+                            const res = await addToList(idResult, tkn.username, title, urlImg, typeList, description, favourite, seen);
                             await getListByUser(tkn.username, API)
                             list.setAdd(true);
                             toast.success(res.data.message)
@@ -105,7 +105,7 @@ const AddList = ({idResult, title, urlImg, typeList, lists, getListByUser}) => {
                         try{
                             favourite = false;
                             seen = true;
-                            const res = await addToList(idResult, tkn.username, title, urlImg, typeList, favourite, seen);
+                            const res = await addToList(idResult, tkn.username, title, urlImg, typeList, description, favourite, seen);
                             await getListByUser(tkn.username, API)
                             list.setAdd(true);
                             toast.success(res.data.message)

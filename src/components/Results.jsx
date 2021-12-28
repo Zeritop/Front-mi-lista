@@ -62,7 +62,8 @@ const Results = ({result, genres, loadResult, getListByUser}) => {
                         idResult={result.id} 
                         title={result.attributes.canonicalTitle}
                         urlImg={result.attributes.posterImage.tiny}
-                        typeList={result.type } 
+                        typeList={result.type }
+                        description={result.attributes.description} 
                     />
                     <ResultDescription>
                         { result.attributes.description }

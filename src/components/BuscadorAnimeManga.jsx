@@ -1,16 +1,18 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Buscador from './Buscador';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { Resultados, ContainerAMBtns, ButtonsAM, ContainerPrincipal } from '../elements/BuscadorElements';
 import BuscadorNavegacionBtns from './BuscadorNavegacionBtns';
+import { Fragment } from 'react';
 
-const BuscadorAnimeManga = ({getAnime, animes, getResultsByLinks, getResult, getGenres, setLoadResult}) => {
+const BuscadorAnimeManga = ({getAnime, animes, getResultsByLinks, getResult, getGenres, setLoadResult, lastPage, page, nextPage, firstPage, prevPage}) => {
 
     const [anime, setAnime] = useState(true);
     const [inpAnime, setInpAnime] = useState('');
     const [load, setLoad] = useState(false);
-    
+    const [scrollOnTop, setScrollOnTop] = useState(false);
+    const [goTop, setGoTop] = useState(true); 
 
     const messageAnime = {
         message: 'Buscar un Anime',
@@ -21,6 +23,14 @@ const BuscadorAnimeManga = ({getAnime, animes, getResultsByLinks, getResult, get
         message: 'Buscar un Manga | Manhwa | Manhua',
         messagePlaceholder: 'Buscar manga...'
     }
+
+    useEffect(() => {
+        if(goTop){
+            // De ser verdadero encuentra el div con Scroll y manda el scroll hacia el inicio con un efecto smooth
+            window.document.body.childNodes[3].childNodes[1].childNodes[0].childNodes[2].scrollTo({top:0, behavior: 'smooth'})
+            setGoTop(false)
+        }
+    }, [goTop])
 
     const animeManga = (e) => {
         const { valor } = e.target.dataset;
@@ -46,19 +56,36 @@ const BuscadorAnimeManga = ({getAnime, animes, getResultsByLinks, getResult, get
     }
 
     const handleLinks = (e) => {
-        const { innerText } = e.target
-        switch(innerText){
-            case 'FIRST':
+        const { valor } = e.target.dataset
+        switch(valor){
+            case 'first':
                 getResultsByLinks(animes.links.first);
+                // Pregunta si scroll no esta en el inicio, de ser así la variable 'goTop' queda en true
+                if(!scrollOnTop) setGoTop(true)
+                // Reestablece el estado de la paginación al inicial (1)
+                firstPage()
                 break;
-            case 'PREV':
+            case 'prev':
                 getResultsByLinks(animes.links.prev);
+                // Pregunta si scroll no esta en el inicio, de ser así la variable 'goTop' queda en true
+                if(!scrollOnTop) setGoTop(true)
+                // Le resta 1 al estado de paginación
+                prevPage()
                 break;
-            case 'NEXT':
+            case 'next':
                 getResultsByLinks(animes.links.next);
+                // Pregunta si scroll no esta en el inicio, de ser así la variable 'goTop' queda en true
+                if(!scrollOnTop) setGoTop(true)
+                // Le suma 1 al estado de paginación
+                nextPage()
                 break;
-            case 'LAST':
+            case 'last':
                 getResultsByLinks(animes.links.last);
+                // Pregunta si scroll no esta en el inicio, de ser así la variable 'goTop' queda en true
+                if(!scrollOnTop) setGoTop(true)
+                // Se redondea hacia arriba el numero total de resultados para determinar el numero de paginas
+                // En la funcion lastPage se envia el numero de la ultima pagina y se actualiza el estado con ese  numero
+                lastPage(Math.ceil(animes.meta.count/10))
                 break;    
             default: 
                 break;    
@@ -69,6 +96,12 @@ const BuscadorAnimeManga = ({getAnime, animes, getResultsByLinks, getResult, get
         getResult(anime)
         getGenres(anime.relationships.genres.links.related)
         setLoadResult(true);
+    }
+
+    const handleScroll = (e) => {
+        // Esta función se ejecuta cuando se hace scroll por la propiedad onScroll del div Resultados
+        // Pregunta si el scroll está en el inicio, si no lo está la variable 'scrollOnTop' queda falso
+        e.target.scrollTop === 0 ? setScrollOnTop(true) : setScrollOnTop(false)
     }
 
     return (
@@ -96,33 +129,40 @@ const BuscadorAnimeManga = ({getAnime, animes, getResultsByLinks, getResult, get
                     handleChange={handleChange}
                 />
             </form>
-            <Resultados>
-            {
-                load && animes.data.map( anime => (
-                    <ul key={anime.id}>
-                       <li 
-                        onClick={() => handleLista(anime)}
-                       >
-                           <p>{ anime.attributes.canonicalTitle }</p>
-                           <img 
-                                src={anime.attributes.posterImage.tiny} 
-                                alt={anime.attributes.slug}
-                            />
-                        </li>
-                        <hr />
-                   </ul>
-               ))
-            }
+            <Resultados onScroll={handleScroll} >
+            <ul>
+                {
+                    load && animes.data.map( anime => (
+                        <Fragment key={anime.id}>
+                        <li 
+                            onClick={() => handleLista(anime)}
+                        >
+                            <p>{ anime.attributes.canonicalTitle }</p>
+                            <img 
+                                    src={anime.attributes.posterImage.tiny} 
+                                    alt={anime.attributes.slug}
+                                />
+                            </li>
+                            <hr />
+                        </Fragment>    
+                    ))
+                }
+            </ul>
             </Resultados>
             {
-                load && <BuscadorNavegacionBtns handleLinks={handleLinks} animes={animes}/>
+                load && <BuscadorNavegacionBtns 
+                    handleLinks={handleLinks} 
+                    animes={animes}
+                    page={page}
+                />
             }
         </ContainerPrincipal>
     )
 }
 
 const mapStateToProps = state => ({
-    animes: state.animes, 
+    animes: state.animes,
+    page: state.page 
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -151,6 +191,28 @@ const mapDispatchToProps = dispatch => ({
         dispatch({
             type: 'GET_GENRE',
             payload: res.data.data
+        })
+    },
+    lastPage(pageNumber){
+        dispatch({
+            type: 'LAST_PAGE',
+            payload: pageNumber
+        })
+    },
+    nextPage(){
+        dispatch({
+            type: 'NEXT_PAGE'
+        })
+    },
+    firstPage(){
+        dispatch({
+            type: 'FIRST_PAGE',
+            payload: 1
+        })
+    },
+    prevPage(){
+        dispatch({
+            type: 'PREV_PAGE'
         })
     }
 })

@@ -6,7 +6,8 @@ const initialState = {
     genres: [],
     users: [],
     lists: [],
-    loggedIn: false
+    loggedIn: false,
+    page: 1
 }
 
 const reducerAnime = (state = initialState, action) => {
@@ -45,7 +46,27 @@ const reducerAnime = (state = initialState, action) => {
             return {
                 ...state,
                 loggedIn: action.payload
-            }           
+            }
+        case 'LAST_PAGE':
+            return {
+                ...state,
+                page: action.payload
+            }
+        case 'NEXT_PAGE':
+            return {
+                ...state,
+                page: state.page +1
+            }
+        case 'FIRST_PAGE':
+            return {
+                ...state,
+                page: state.page = action.payload
+            }
+        case 'PREV_PAGE':
+            return {
+                ...state,
+                page: state.page -1
+            }                          
         default:
             return state;
     }
