@@ -12,7 +12,7 @@ const BuscadorAnimeManga = ({getAnime, animes, getResultsByLinks, getResult, get
     const [inpAnime, setInpAnime] = useState('');
     const [load, setLoad] = useState(false);
     const [scrollOnTop, setScrollOnTop] = useState(false);
-    const [goTop, setGoTop] = useState(true); 
+    const [goTop, setGoTop] = useState(false); 
 
     const messageAnime = {
         message: 'Buscar un Anime',
