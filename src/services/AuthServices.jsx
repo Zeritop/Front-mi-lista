@@ -1,8 +1,6 @@
 import axios from 'axios';
 import { API } from '../entorno';
 
-// const API = window.location.hostname === 'localhost' || window.location.hostname === "127.0.0.1" ? 'http://localhost:4000' : 'https://backend-mi-lista.herokuapp.com/';
-
 const registerAuth = async (username, email, password) => {
     return await axios.post(`${API}/api/users/register`, {
         username,
@@ -18,7 +16,19 @@ const loginAuth = async (email, password) => {
     })
 }
 
+const getImgProfile = async (username) => {
+    return await axios.post(`${API}/api/users/get-img-profile`, {
+        username
+    })
+}
+
+const uploadImage = async (formdata, config) => {
+    return await axios.post(`${API}/api/usersTk/upload-profileImage`, formdata, config)
+}
+
 export {
     registerAuth,
-    loginAuth
+    loginAuth,
+    getImgProfile,
+    uploadImage
 }

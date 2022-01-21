@@ -27,7 +27,6 @@ const BuscadorAnimeManga = ({getAnime, animes, getResultsByLinks, getResult, get
     useEffect(() => {
         if(goTop){
             // De ser verdadero encuentra el div con Scroll y manda el scroll hacia el inicio con un efecto smooth
-            // window.document.body.childNodes[3].childNodes[1].childNodes[0].childNodes[2].scrollTo({top:0, behavior: 'smooth'})
             document.getElementById("resultados").scrollTo({top: 0, behavior: 'smooth'})
             setGoTop(false) 
         }

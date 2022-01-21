@@ -107,11 +107,25 @@ const ButtonProfile = styled.button`
     
 `;
 
+const UlProfileList = styled.ul`
+    list-style: none;
+    padding: 0;
+    text-align: end;
+`;
+
+const UlContainer = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+`;
+
 export {
     ContainerProfile,
     ContainerProfileLists,
     ContainerButtonsLists,
     ContainerList,
     ButtonProfile,
-    ContainerPrincipalProfile
+    ContainerPrincipalProfile,
+    UlProfileList,
+    UlContainer
 }

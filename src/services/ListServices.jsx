@@ -2,14 +2,13 @@ import axios from 'axios';
 import validateUser from '../functions/validateUser';
 import { API } from '../entorno';
 
-const addToList = async (idList, author, title, urlImg, typeList, description, favourite = false, seen = false) => {
+const addToList = async (idList, author, title, urlImg, typeList, favourite = false, seen = false) => {
     return await axios.post(`${API}/api/lists/add-list`, {
         idList,
         author,
         title,
         urlImg,
         typeList,
-        description,
         favourite,
         seen
     }, {headers: validateUser()})
