@@ -1,58 +1,47 @@
-import React, { useEffect, useState } from 'react'
-import Buscador from './Buscador';
+import React, { useEffect, useState, Fragment } from 'react'
+//Components
+import Buscador from '../Buscador';
+import BuscadorNavegacionBtns from '../buscadorNavBtns/BuscadorNavegacionBtns';
+import BotonesAM from './BotonesAM'
+//Elements
+import { Resultados, ContainerPrincipal } from '../../elements/BuscadorElements';
+//Hooks
+import { useBoolean } from '../../hooks/customHooks'
+//Functions
+import { messageAnime, messageManga } from './functions'
+//Others
 import { connect } from 'react-redux';
 import axios from 'axios';
-import { Resultados, ContainerAMBtns, ButtonsAM, ContainerPrincipal } from '../elements/BuscadorElements';
-import BuscadorNavegacionBtns from './BuscadorNavegacionBtns';
-import { Fragment } from 'react';
 
 const BuscadorAnimeManga = ({getAnime, animes, getResultsByLinks, getResult, getGenres, setLoadResult, lastPage, page, nextPage, firstPage, prevPage}) => {
 
-    const [anime, setAnime] = useState(true);
     const [inpAnime, setInpAnime] = useState('');
-    const [load, setLoad] = useState(false);
-    const [scrollOnTop, setScrollOnTop] = useState(false);
-    const [goTop, setGoTop] = useState(false); 
 
-    const messageAnime = {
-        message: 'Buscar un Anime',
-        messagePlaceholder: 'Buscar anime...'
-    }
-
-    const messageManga = {
-        message: 'Buscar un Manga | Manhwa | Manhua',
-        messagePlaceholder: 'Buscar manga...'
-    }
+    const scrollOnTop = useBoolean();
+    const anime       = useBoolean(true);
+    const goTop       = useBoolean();
+    const load        = useBoolean();
 
     useEffect(() => {
-        if(goTop){
+        if(goTop.boolean){
             // De ser verdadero encuentra el div con Scroll y manda el scroll hacia el inicio con un efecto smooth
             document.getElementById("resultados").scrollTo({top: 0, behavior: 'smooth'})
-            setGoTop(false) 
+            goTop.setBoolean(false) 
         }
     }, [goTop])
 
-    const animeManga = (e) => {
-        const { valor } = e.target.dataset;
-        if(valor === 'anime'){
-            setAnime(true);
-        }
-        if(valor === 'manga'){
-            setAnime(false);
-        }
-    }
-
     const handleChange = (e) => {
-        setInpAnime(e.target.value)
-        if(e.target.value === ''){
-            setLoad(false);
-        }
+        const { value } = e.target
+
+        value === '' && load.setBoolean(false)
+        setInpAnime(value)
+        
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await getAnime(inpAnime, anime);
-        setLoad(true);
+        await getAnime(inpAnime, anime.boolean);
+        load.setBoolean(true);
     }
 
     const handleLinks = (e) => {
@@ -61,28 +50,28 @@ const BuscadorAnimeManga = ({getAnime, animes, getResultsByLinks, getResult, get
             case 'first':
                 getResultsByLinks(animes.links.first);
                 // Pregunta si scroll no esta en el inicio, de ser así la variable 'goTop' queda en true
-                if(!scrollOnTop) setGoTop(true)
+                if(!scrollOnTop.boolean) goTop.setBoolean(true)
                 // Reestablece el estado de la paginación al inicial (1)
                 firstPage()
                 break;
             case 'prev':
                 getResultsByLinks(animes.links.prev);
                 // Pregunta si scroll no esta en el inicio, de ser así la variable 'goTop' queda en true
-                if(!scrollOnTop) setGoTop(true)
+                if(!scrollOnTop.boolean) goTop.setBoolean(true)
                 // Le resta 1 al estado de paginación
                 prevPage()
                 break;
             case 'next':
                 getResultsByLinks(animes.links.next);
                 // Pregunta si scroll no esta en el inicio, de ser así la variable 'goTop' queda en true
-                if(!scrollOnTop) setGoTop(true)
+                if(!scrollOnTop.boolean) goTop.setBoolean(true)
                 // Le suma 1 al estado de paginación
                 nextPage()
                 break;
             case 'last':
                 getResultsByLinks(animes.links.last);
                 // Pregunta si scroll no esta en el inicio, de ser así la variable 'goTop' queda en true
-                if(!scrollOnTop) setGoTop(true)
+                if(!scrollOnTop.boolean) goTop.setBoolean(true)
                 // Se redondea hacia arriba el numero total de resultados para determinar el numero de paginas
                 // En la funcion lastPage se envia el numero de la ultima pagina y se actualiza el estado con ese  numero
                 lastPage(Math.ceil(animes.meta.count/10))
@@ -101,30 +90,18 @@ const BuscadorAnimeManga = ({getAnime, animes, getResultsByLinks, getResult, get
     const handleScroll = (e) => {
         // Esta función se ejecuta cuando se hace scroll por la propiedad onScroll del div Resultados
         // Pregunta si el scroll está en el inicio, si no lo está la variable 'scrollOnTop' queda falso
-        e.target.scrollTop === 0 ? setScrollOnTop(true) : setScrollOnTop(false)
+        e.target.scrollTop === 0 ? scrollOnTop.setBoolean(true) : scrollOnTop.setBoolean(false)
     }
 
     return (
         <ContainerPrincipal>
-            <ContainerAMBtns>
-                <ButtonsAM 
-                    onClick={(e) => animeManga(e)}
-                    data-valor="anime"
-                    anime={anime && 'anime'}
-                >
-                Anime</ButtonsAM>
-
-                <ButtonsAM
-                    onClick={(e) => animeManga(e)}
-                    data-valor="manga"
-                    anime={!anime && 'manga'}
-                >Manga</ButtonsAM>
-            </ContainerAMBtns>
+            <BotonesAM anime={anime} />
+        
             <form onSubmit={handleSubmit} >
                 <Buscador 
-                    message={anime ? messageAnime.message : messageManga.message} 
-                    messagePlaceholder={anime ? messageAnime.messagePlaceholder : messageManga.messagePlaceholder}
-                    anime={anime}
+                    message={anime.boolean ? messageAnime.message : messageManga.message} 
+                    messagePlaceholder={anime.boolean ? messageAnime.messagePlaceholder : messageManga.messagePlaceholder}
+                    anime={anime.boolean}
                     inpAnime={inpAnime} 
                     handleChange={handleChange}
                 />
@@ -132,7 +109,7 @@ const BuscadorAnimeManga = ({getAnime, animes, getResultsByLinks, getResult, get
             <Resultados onScroll={handleScroll} id="resultados" >
             <ul>
                 {
-                    load && animes.data.map( anime => (
+                    load.boolean && animes.data.map( anime => (
                         <Fragment key={anime.id}>
                         <li 
                             onClick={() => handleLista(anime)}
@@ -150,7 +127,7 @@ const BuscadorAnimeManga = ({getAnime, animes, getResultsByLinks, getResult, get
             </ul>
             </Resultados>
             {
-                load && <BuscadorNavegacionBtns 
+                load.boolean && <BuscadorNavegacionBtns 
                     handleLinks={handleLinks} 
                     animes={animes}
                     page={page}

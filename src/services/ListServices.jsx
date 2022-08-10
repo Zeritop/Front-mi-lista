@@ -2,37 +2,34 @@ import axios from 'axios';
 import validateUser from '../functions/validateUser';
 import { API } from '../entorno';
 
-const addToList = async (idList, author, title, urlImg, typeList, favourite = false, seen = false) => {
+const addToList = async (idList, description, title, urlImg, typeList, favourite = false, seen = false, userId) => {
     return await axios.post(`${API}/api/lists/add-list`, {
         idList,
-        author,
-        title,
-        urlImg,
-        typeList,
-        favourite,
-        seen
-    }, {headers: validateUser()})
-}
-
-const updateToList = async (idList, author, title, urlImg, typeList, favourite, seen, userTk, id) => {
-    return await axios.put(`${API}/api/lists/update-list`, {
-        idList,
-        author,
+        description,
         title,
         urlImg,
         typeList,
         favourite,
         seen,
-        userTk,
-        _id: id
+        userId
     }, {headers: validateUser()})
 }
 
-const deleteFromList = async (id, author, userTk) => {
+const updateToList = async (nameLogin, id, favourite, seen, userTk) => {
+    return await axios.put(`${API}/api/lists/update-list`, {
+        nameLogin,
+        id,
+        favourite,
+        seen,
+        userTk
+    }, {headers: validateUser()})
+}
+
+const deleteFromList = async (nameLogin, id, userTk) => {
     return await axios.delete(`${API}/api/lists/delete-list`, {
         data: {
-            _id: id,
-            author,
+            nameLogin,
+            id,
             userTk
         },
         headers: validateUser()

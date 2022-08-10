@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Fragment } from 'react'
+//Services
 import { getImgProfile } from '../services/AuthServices';
-import { API } from '../entorno';
-import { Fragment } from 'react';
-import styled from 'styled-components';
+//Images
 import editar from '../img/editar.png';
+//Others
 import ReactTooltip from 'react-tooltip';
+import styled from 'styled-components';
+import { API } from '../entorno';
 
 const ContainerImage = styled.div`
     display: flex;
@@ -13,7 +15,7 @@ const ContainerImage = styled.div`
 `;
 
 const ContainerProfileImg = styled.div`
-    width: 48%;
+    width: 60%;
     height: 11rem;
     border-radius: 100%;
     display: flex;
@@ -22,7 +24,7 @@ const ContainerProfileImg = styled.div`
 
     img{
         width: 100%;
-        // Si la propiedad img con tiene la palabra 'user.png' se devuelve contain sino cover
+        // Si la propiedad img contiene la palabra 'user.png' se devuelve contain sino cover
         object-fit: ${props => props.img === 'user.png' ? 'contain' : 'cover'};
     }
 `;

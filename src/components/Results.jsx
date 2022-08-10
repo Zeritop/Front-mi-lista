@@ -6,7 +6,7 @@ import { ConatinerResult,
     ResultDescription,
     NoResults
 } from '../elements/ResultElements';
-import AddList from './AddList';
+import AddList from './addList/AddList';
 import animeNoResult from '../img/anime-triste.png';
 import jwt_decode from 'jwt-decode';
 import axios from 'axios';

@@ -17,6 +17,7 @@ import { Helmet, HelmetProvider } from 'react-helmet-async'
 const Index = () => {
   return(
     <StrictMode>
+
       <HelmetProvider>
         <Helmet>
           <link rel="shortcut icon" href={favicon} type="image/x-icon"/>
@@ -24,7 +25,8 @@ const Index = () => {
         </Helmet>
         
         <BrowserRouter>
-        <NavBar />
+
+          <NavBar />
 
           <Routes>
 
@@ -42,12 +44,14 @@ const Index = () => {
             
             <Route path="*" element={<NotFound404 />} />
 
-          </Routes>
-        </BrowserRouter>
-        <ToastContainer />
-      </HelmetProvider>
-    </StrictMode>  
+          </Routes> {/* Fin Routes */} 
+        </BrowserRouter> {/* Fin BrowserRouter */}
 
+        <ToastContainer />
+
+      </HelmetProvider> {/* Fin HelmetProvider */}
+
+    </StrictMode>  
   )
 }
 

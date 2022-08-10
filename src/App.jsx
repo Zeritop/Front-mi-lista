@@ -1,4 +1,4 @@
-import BuscadorAnimeManga from './components/BuscadorAnimeManga';
+import BuscadorAnimeManga from './components/buscadorAnimeManga/BuscadorAnimeManga';
 import { AppContainer } from './styles/AppStyles';
 import Results from './components/Results';
 import { useState } from 'react';

@@ -29,7 +29,7 @@ const ProfileLists = () => {
                     selected={stateList === 'lista' ? true : false}
                     onClick={(e) => handleStateList(e)}
                 >
-                    Lista
+                    Pendientes
                 </ButtonProfile>
                 <ButtonProfile
                     name="favoritos"

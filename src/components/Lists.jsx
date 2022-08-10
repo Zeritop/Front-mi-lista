@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { ContainerList } from '../elements/ProfileElements'
-import { connect } from 'react-redux';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
+//Elements
 import { ListImg,
     TitleTable,
     Table,
@@ -11,26 +8,36 @@ import { ListImg,
     TdButtonsTable,
     ScrollabeDiv
 } from '../elements/ListsElements';
-import star from '../img/star.png';
-import unseen from '../img/hidden.png';
-import fav from '../img/favorite.png';
-import seen from '../img/view.png';
+import { ContainerList } from '../elements/ProfileElements';
+import { NoResults }     from '../elements/ResultElements';
+import { Loading }       from '../elements/Loading';
+//Images
+import fav     from '../img/favorite.png';
+import unseen  from '../img/hidden.png';
 import delIcon from '../img/delete.png';
-import { Loading } from '../elements/Loading';
-import { NoResults } from '../elements/ResultElements';
-import ReactTooltip from 'react-tooltip';
-import { updateToList, deleteFromList } from '../services/ListServices';
-import { toast } from 'react-toastify';
-import jwt_decode from 'jwt-decode';
-import { API } from '../entorno';
+import star    from '../img/star.png';
+import seen    from '../img/view.png';
+//Components
 import ListModal from './ListModal';
+//Services
+import { updateToList, deleteFromList } from '../services/ListServices';
+//Others
+import { useBoolean } from '../hooks/customHooks'
+import { useParams }  from 'react-router-dom';
+import { toast }      from 'react-toastify';
+import ReactTooltip   from 'react-tooltip';
+import { connect }    from 'react-redux';
+import jwt_decode     from 'jwt-decode';
+import { API }        from '../entorno';
+import axios          from 'axios';
 
-const Lists = ({getListByUser, usrTk, lists, stateList, loggedIn, logIn}) => {
+const Lists = ({getListByUser, usrTk, lists, stateList, loggedIn, logIn, users}) => {
     const { username } = useParams();
-    const [loadList, setLoadList] = useState(false);
-    const [igualdadNick, setIgualdadNick] = useState(false)
-    const [modal , setModal] = useState(false);
     const [modalDesc, setModalDesc] = useState({})
+
+    const igualdadNick = useBoolean();
+    const loadList     = useBoolean();
+    const modal        = useBoolean();
     
     const lista = lists.filter(list => {
                     if(stateList === 'favoritos'){
@@ -40,7 +47,9 @@ const Lists = ({getListByUser, usrTk, lists, stateList, loggedIn, logIn}) => {
                     }
                     return list.favourite === false && list.seen === false
                 });
+
     const getToken = localStorage.getItem('tk') ? localStorage.getItem('tk') : '';
+
     useEffect(() => {
         if(localStorage.getItem('tk')){
             logIn()
@@ -49,17 +58,17 @@ const Lists = ({getListByUser, usrTk, lists, stateList, loggedIn, logIn}) => {
             if(getToken !== ''){
                 const token = jwt_decode(getToken)
                 if(token.username === username){
-                    setIgualdadNick(true);
+                    igualdadNick.setBoolean(true);
                 }else{
-                    setIgualdadNick(false);
+                    igualdadNick.setBoolean(false);
                 }
             }else{
-                setIgualdadNick(false);
+                igualdadNick.setBoolean(false);
             }
         }else{
-            setIgualdadNick(false)
+            igualdadNick.setBoolean(false)
         }
-    }, [username, getToken, loggedIn, logIn])
+    }, [username, getToken, loggedIn, logIn, igualdadNick])
     
     useEffect(() => {
 
@@ -67,23 +76,24 @@ const Lists = ({getListByUser, usrTk, lists, stateList, loggedIn, logIn}) => {
         tiempo = setTimeout(async () => {
             try{
                 await getListByUser(username, API)
-                setLoadList(true);
+                loadList.setBoolean(true);
             }catch(error){
                 console.log(error);
             }
         }, 500)
 
         return(() => clearTimeout(tiempo));
-    }, [username, getListByUser])
+    }, [username, getListByUser, loadList])
 
 
-    const handleActions = async (e, idList, urlImg, title, typeList, id, author, fav, seenUnseen ) => {
+    const handleActions = async (e, id, fav, seenUnseen ) => {
         const { name } = e.target
+        const nameLogin = users.username
 
         switch(name){
             case 'favourite':
                 try{
-                    await updateToList(idList, author, title, urlImg, typeList, !fav, seenUnseen, usrTk.username, id);
+                    await updateToList(nameLogin, id, !fav, seenUnseen, usrTk.username);
                     await getListByUser(username, API)
                 }catch(error){
                     toast.error(error.response.data.message)
@@ -91,7 +101,7 @@ const Lists = ({getListByUser, usrTk, lists, stateList, loggedIn, logIn}) => {
                 break;
             case 'seen':
                 try{
-                    await updateToList(idList, author, title, urlImg, typeList, fav, !seenUnseen, usrTk.username, id);
+                    await updateToList(nameLogin, id, fav, !seenUnseen, usrTk.username);
                     await getListByUser(username, API)
                 }catch(error){
                     toast.error(error.response.data.message)
@@ -99,7 +109,7 @@ const Lists = ({getListByUser, usrTk, lists, stateList, loggedIn, logIn}) => {
                 break;
             case 'delete':
                 try{
-                    const res = await deleteFromList(id, author, usrTk.username)
+                    const res = await deleteFromList(nameLogin, id, usrTk.username)
                     toast.success(res.data.message)
                     await getListByUser(username, API)
                 }catch(error){
@@ -112,7 +122,7 @@ const Lists = ({getListByUser, usrTk, lists, stateList, loggedIn, logIn}) => {
     }
 
     const modalDescription = (title, urlImg, id, typelist) => {
-        setModal(true);
+        modal.setBoolean(true);
         setModalDesc({
             title,
             urlImg,
@@ -127,7 +137,7 @@ const Lists = ({getListByUser, usrTk, lists, stateList, loggedIn, logIn}) => {
             {
                 lista.length !== 0 ? (<ScrollabeDiv>
                     {
-                        loadList ? (<Table>
+                        loadList.boolean ? (<Table>
                             <thead>
                                 <tr>
                                     <th>IMG</th>
@@ -142,29 +152,35 @@ const Lists = ({getListByUser, usrTk, lists, stateList, loggedIn, logIn}) => {
                                     
                                     lista.map(l => (
                                         <tr 
-                                            key={l.idList}
-                                            onClick={() => modalDescription(l.title, l.urlImg, l.idList, l.typeList)}
+                                            key={l.lista?.idList}   
                                         >
-                                            <td>
-                                                <ListImg src={l.urlImg} alt="" />
+                                            <td
+                                                onClick={() => modalDescription(l.lista?.title, l.lista?.urlImg, l.lista?.idList, l.lista?.typeList)}
+                                            >
+                                                <ListImg src={l.lista?.urlImg} alt="" />
                                             </td>
-                                            <td>
+                                            <td
+                                                onClick={() => modalDescription(l.lista?.title, l.lista?.urlImg, l.lista?.idList, l.lista?.typeList)}
+                                            >
                                                 <TitleTable>
-                                                    { l.title }
+                                                    { l.lista?.title }
                                                 </TitleTable>
                                             </td>
-                                            <td>{ l.typeList }</td>
+                                            <td 
+                                                onClick={() => modalDescription(l.lista?.title, l.lista?.urlImg, l.lista?.idList, l.lista?.typeList)}
+                                            >
+                                                { l.lista?.typeList }</td>
                                             <TdButtonsTable>
-                                                <ContainerButtons igual={igualdadNick}>
+                                                <ContainerButtons igual={igualdadNick.boolean}>
                                                     {
-                                                        igualdadNick && <>
+                                                        igualdadNick.boolean && <>
                                                         <ButtonImg>
                                                         <img 
                                                             src={l.favourite ? fav : star}
                                                             alt=""
                                                             data-tip={l.favourite ? 'Quitar de Favoritos' : 'Agregar a Favoritos'}
                                                             name="favourite"
-                                                            onClick={(e) => handleActions(e, l.idList, l.urlImg, l.title, l.typeList, l._id, l.author, l.favourite, l.seen)}
+                                                            onClick={(e) => handleActions(e, l._id, l.favourite, l.seen)}
                                                          />
                                                     </ButtonImg>
                                                     <ButtonImg>
@@ -173,7 +189,7 @@ const Lists = ({getListByUser, usrTk, lists, stateList, loggedIn, logIn}) => {
                                                             alt=""
                                                             data-tip={l.seen ? 'Quitar de Vistos' : 'Agregar a Vistos'}
                                                             name="seen"
-                                                            onClick={(e) => handleActions(e, l.idList, l.urlImg, l.title, l.typeList, l._id, l.author, l.favourite, l.seen)}
+                                                            onClick={(e) => handleActions(e, l._id, l.favourite, l.seen)}
                                                         />
                                                     </ButtonImg>
                                                     <ButtonImg>
@@ -182,7 +198,7 @@ const Lists = ({getListByUser, usrTk, lists, stateList, loggedIn, logIn}) => {
                                                             alt=""
                                                             data-tip="Eliminar de toda la lista"    
                                                             name="delete"
-                                                            onClick={(e) => handleActions(e, l.idList, l.urlImg, l.title, l.typeList, l._id, l.author)}
+                                                            onClick={(e) => handleActions(e, l._id)}
                                                         />
                                                     </ButtonImg>
                                                     <ReactTooltip /></>
@@ -215,7 +231,7 @@ const Lists = ({getListByUser, usrTk, lists, stateList, loggedIn, logIn}) => {
                 (<div>Sin Resultados</div>)
             }
             {
-              modal && <ListModal description={modalDesc} setModal={setModal} />  
+              modal.boolean && <ListModal description={modalDesc} setModal={modal.setBoolean} />  
             } 
         </ContainerList>
     )
@@ -223,12 +239,13 @@ const Lists = ({getListByUser, usrTk, lists, stateList, loggedIn, logIn}) => {
 
 const mapStateToProps = state => ({
     lists: state.lists,
-    loggedIn: state.loggedIn 
+    loggedIn: state.loggedIn,
+    users: state.users 
 })
 
 const mapDispatchToProps = dispatch => ({
-    async getListByUser(author, API){
-        const res = await axios.post(`${API}/api/lists-no-tk/get-lists`, {author})
+    async getListByUser(username, API){
+        const res = await axios.post(`${API}/api/lists-no-tk/get-lists`, { username })
         dispatch({
             type: 'GET_LISTS_BY_USER',
             payload: res.data.data

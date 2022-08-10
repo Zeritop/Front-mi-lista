@@ -1,13 +1,16 @@
-import React, { useEffect } from 'react'
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react'
+//Elements
 import { NavBarContent, BrandImg, ProfileImg } from '../elements/NavBarElements';
+//Images
 import logo from '../img/logo_size_invert_email.jpg';
 import profile from '../img/user.png';
+//Components
 import Auth from './Auth';
-import jwt_decode from 'jwt-decode';
 import User from './User';
+//Others
 import { Link } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import jwt_decode from 'jwt-decode';
 import store from '../store';
 
 const NavBar = () => {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+//Elements
 import {ModalConatainer,
     ModalCard,
     ModalHeader,
@@ -7,13 +8,17 @@ import {ModalConatainer,
     ContainerModalHeader,
     ModalBodyContainer
 } from '../elements/ListsElements';
-import axios from 'axios';
-import { Loading } from '../elements/Loading';
 import { NoResults } from '../elements/ResultElements';
+import { Loading } from '../elements/Loading';
+//Others
+import { useBoolean } from '../hooks/customHooks';
+import axios from 'axios';
 
 const ListModal = ({description, setModal}) => {
     const [desc, setDesc] = useState('');
-    const [cargar, setCargar] = useState(false);
+
+    const cargar = useBoolean();
+
     const typelist = description.typelist;
     const iD = description.id
     
@@ -26,11 +31,11 @@ const ListModal = ({description, setModal}) => {
         let tiempo;
         tiempo = setTimeout(async () => {
             await getDescriptionById(typelist, iD)
-            setCargar(true);
+            cargar.setBoolean(true);
         }, 100)
 
         return(() => clearTimeout(tiempo));
-    }, [typelist, iD])
+    }, [typelist, iD, cargar])
 
     const closeModal = () => {
         setModal(false);
@@ -45,7 +50,7 @@ const ListModal = ({description, setModal}) => {
                 <ModalBody>
                     <ModalBodyContainer>
                         {
-                            cargar ? (
+                            cargar.boolean ? (
                                 <>
                                     <h2>{ description.title }</h2>
                                     <img src={description.urlImg} alt={description.title} />

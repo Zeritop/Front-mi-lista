@@ -1,10 +1,10 @@
 import { useState } from 'react';
 
-const useAdd = () => {
-    const  [add, setAdd] = useState(false);
+const useBoolean = (bool = false) => {
+    const  [boolean, setBoolean] = useState(bool);
     return {
-        add, 
-        setAdd
+        boolean, 
+        setBoolean
     }
 }
 
@@ -16,4 +16,4 @@ const useFormAuth = () => {
     }
 }
 
-export { useAdd, useFormAuth }
+export { useBoolean, useFormAuth }

@@ -1,38 +1,39 @@
 import React, { useEffect, useState } from 'react'
-import { AppContainer } from '../styles/AppStyles';
 import { useParams, useNavigate } from 'react-router-dom';
+import { AppContainer } from '../styles/AppStyles';
 import { connect } from 'react-redux';
+import jwt_decode from 'jwt-decode';
 import { API } from '../entorno';
 import axios from 'axios';
-import jwt_decode from 'jwt-decode';
 // Components
 import ProfileLists from './ProfileLists';
-import ProfileImg from './ProfileImg';
-import { toast } from 'react-toastify';
+import ProfileImg   from './ProfileImg';
+import { toast }    from 'react-toastify';
 // Elements
-import { NoResults } from '../elements/ResultElements';
 import { ContainerProfile, UlProfileList, UlContainer } from '../elements/ProfileElements';
-import { Loading } from '../elements/Loading';
+import { NoResults } from '../elements/ResultElements';
+import { Loading }   from '../elements/Loading';
 // Services
 import { uploadImage } from '../services/AuthServices';
+import { useBoolean }  from '../hooks/customHooks';
 
 const Profile = ({getUser, users, lists}) => {
 
     // States
-    const [loadUser, setLoadUser] = useState(false);
     const [image, setImage] = useState(null);
     const [user_name, setUser_name] = useState(null);
-    const [sameUser, setSameUser] = useState(false);
-    const [editing, setEditing] = useState(false);
-    const [refresh, setRefresh] = useState(false);
+    const loadUser = useBoolean();
+    const sameUser = useBoolean();
+    const editing  = useBoolean();
+    const refresh  = useBoolean();
 
     // Router Dom
     const { username } = useParams();
     const navigate = useNavigate();
 
     //Variables
-    const allLists = lists.filter(l => l.favourite === false && l.seen === false).length;
-    const favLists = lists.filter(l => l.favourite === true).length;
+    const allLists  = lists.filter(l => l.favourite === false && l.seen === false).length;
+    const favLists  = lists.filter(l => l.favourite === true).length;
     const seenLists = lists.filter(l => l.seen === true).length;
 
     
@@ -45,22 +46,22 @@ const Profile = ({getUser, users, lists}) => {
                 let usuario = jwt_decode(localStorage.getItem('tk'))
                 if(username === usuario.username){ 
                     // si el username coincide con el username de usuario la variable sameUSer se vuelve true
-                    setSameUser(true)
+                    sameUser.setBoolean(true)
                 }else{
                     // Sino False
-                    setSameUser(false)
+                    sameUser.setBoolean(false)
                 }
             }
             try{
                 await getUser(username, API); // Llamada a la api para obtener al usuario    
-                setLoadUser(true); // variable para controlar el cargado en true
+                loadUser.setBoolean(true); // variable para controlar el cargado en true
             }catch(error){
                 navigate("/not-found") // Sino se navega hacia not-found
             }
         }, 1000);
 
        return(() => clearTimeout(tiempo)); 
-    }, [getUser, username, navigate])
+    }, [getUser, username, navigate, loadUser, sameUser])
 
     const handleChange = (e) => {
         // Se controla el input file y se guarda su contenido en la variable image
@@ -98,26 +99,26 @@ const Profile = ({getUser, users, lists}) => {
         }else{
             toast.warning('Por favor seleccionar una imagen')
         }
-        setEditing(false)
-        setRefresh(true);
+        editing.setBoolean(false)
+        refresh.setBoolean(true);
     }
 
     return (
             <AppContainer>
                 {
-                    loadUser ? (
+                    loadUser.boolean ? (
                     <>
                         <ContainerProfile>
                             <ProfileImg 
                                 username={user_name}
-                                sameUser={sameUser}
-                                setEditing={setEditing}
-                                editing={editing}
-                                refresh={refresh}
-                                setRefresh={setRefresh}
+                                sameUser={sameUser.boolean}
+                                setEditing={editing.setBoolean}
+                                editing={editing.boolean}
+                                refresh={refresh.boolean}
+                                setRefresh={refresh.setBoolean}
                             />
                             {
-                                editing && <form 
+                                editing.boolean && <form 
                                                 onSubmit={handleSubmit}
                                                 encType="multipart/form-data"
                                             >
@@ -140,7 +141,7 @@ const Profile = ({getUser, users, lists}) => {
                             <UlContainer>
                                 <UlProfileList>
                                     <li> 
-                                        <b>Lista:</b> { allLists }
+                                        <b>Pendientes:</b> { allLists }
                                     </li>
                                     <li>
                                     <b>Favoritos:</b> { favLists }
