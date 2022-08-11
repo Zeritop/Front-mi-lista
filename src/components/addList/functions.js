@@ -6,11 +6,9 @@ const handleList = async (e, tkn, idResult, title, urlImg, typeList, description
     if(!localStorage.getItem('tk')){
         return toast.warning('Inicia sesión para esta acción')
     }else{
-        console.log(lists)
         const inArray = lists.map(l => l.lista?.idList).includes(idResult);
-        console.log(inArray)
         const findInList = lists.filter(l => l.lista?.idList === idResult)
-        console.log(findInList)
+        
         let favourite = false;
         let seen = false;
         switch(name){
@@ -50,7 +48,7 @@ const handleList = async (e, tkn, idResult, title, urlImg, typeList, description
                     }
                 }else{
                     try{
-                        const res = await updateToList(username, findInList[0].lista._id, !findInList[0].favourite, seen, tkn.username)
+                        const res = await updateToList(username, findInList[0]._id, !findInList[0].favourite, seen, tkn.username)
                         await getListByUser(tkn.username, API)
                         // list.setBoolean(true)
                         toast.success(res.data.message)
@@ -74,7 +72,7 @@ const handleList = async (e, tkn, idResult, title, urlImg, typeList, description
                     }
                 }else{
                     try{
-                        const res = await updateToList(username, findInList[0].lista._id, favourite, !findInList[0].seen, tkn.username)
+                        const res = await updateToList(username, findInList[0]._id, favourite, !findInList[0].seen, tkn.username)
                         await getListByUser(tkn.username, API)
                         // list.setBoolean(true)
                         toast.success(res.data.message)
